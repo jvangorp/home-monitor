@@ -1,5 +1,5 @@
-# Flask web application that receives datab from the Rainforest Automation
-# Eagle gateway and pushes the XML fragments to the RabbitMQ queue.
+# Flask web application that receives data from the Rainforest Automation
+# Eagle gateway and pushes the XML fragments to a RabbitMQ queue.
 
 from flask import Flask, request, Response
 import pika
