@@ -66,3 +66,5 @@ def callback(ch, method, properties, body):
 channel.basic_consume(callback,
                       queue=queue_name,
                       no_ack=True)
+
+channel.start_consuming()
