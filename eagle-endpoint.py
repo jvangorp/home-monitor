@@ -28,12 +28,10 @@ def eagle_endpoint():
     # FastPollStatus messages.
     message = etree.fromstring(request.data)
     fragment = message[0]
-    print fragment.tag
 
     if fragment.tag == 'FastPollStatus':
       frequency = int(fragment.findtext('Frequency'), base=0)
       mac_id = fragment.findtext('DeviceMacId')
-      print frequency, mac_id
 
       # If fast polling is disabled, set it to 5s for 15 min and
       # build set_fast_poll response to send to the gateway.
@@ -51,7 +49,6 @@ def eagle_endpoint():
         dur_element.text = '0x0F'
 
         response = etree.tostring(command)
-        print response
         return response
 
       else:
