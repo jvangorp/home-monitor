@@ -26,7 +26,7 @@ def eagle_endpoint():
 
     # Parse payload from Eagle gateway and look for
     # FastPollStatus messages.
-    message = etree.fromstring(body)
+    message = etree.fromstring(request.data)
     fragment = message[0]
 
     if fragment.tag == 'FastPollStatus':
