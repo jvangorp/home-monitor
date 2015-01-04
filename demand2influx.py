@@ -56,7 +56,7 @@ def callback(ch, method, properties, body):
 
         # Organize demand measurement into InfluxDB dict format.
         influx = {}
-        influx['name'] = 'home.demand'
+        influx['name'] = 'vangorp.home.demand'
         influx['columns'] = ['time', 'demand']
         influx['points'] = [[float(timestamp), InstantaneousDemand]]
 
