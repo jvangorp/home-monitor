@@ -31,7 +31,7 @@ def callback(ch, method, properties, body):
     # Extract timestamp and remove the 's' at the end.
     timestamp_epoch = message.attrib['timestamp']
     timestamp_epoch = timestamp_epoch[:-1]
-    timestamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(timestamp_epoch))
+    timestamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(float(timestamp_epoch))
 
 
     # Extract set of elements from Eagle gateway post.
