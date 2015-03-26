@@ -8,8 +8,10 @@ from ConfigParser import SafeConfigParser
 # Read in app config values.
 config = SafeConfigParser()
 config.read('monitor-apps-config.ini')
+host = config.get('Postgres', 'host')
 database = config.get('Postgres', 'database')
 user = config.get('Postgres', 'user')
+password = config.get('Postgres', 'password')
 
 # Set up the connection to the RabbitMQ server.
 connection = pika.BlockingConnection(pika.ConnectionParameters(
@@ -28,7 +30,10 @@ channel.queue_bind(exchange='vangorp.home.eagle',
                    queue=queue_name)
 
 # Set up connection to Postgres database.
-conn_string = 'dbname=' + database + ' ' + 'user=' + user
+conn_string = """
+host={0} dbname={1} user={2} password={3}
+""".format(host, database, user, password)
+
 conn = psycopg2.connect(conn_string)
 cursor = conn.cursor()
 
