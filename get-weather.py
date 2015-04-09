@@ -10,7 +10,7 @@ base_url = "http://www.victoriaweather.ca/stations/"
 base_resource = "/current.xml"
 
 # Set up a list with weather station names.
-stations = ['Sidney', 'Kelset', 'Keating', 'Butchart']
+stations = ['Sidney', 'Kelset', 'Keating', 'Brentwood', 'Butchart']
 
 # Continually scan list of weather stations for new data.
 while True:
