@@ -58,14 +58,21 @@ def callback(ch, method, properties, body):
     wind_speed_heading = message.findtext('wind_speed_heading')
 
     # Create INSERT statement.
-    SQL = """insert into weather (ts,station,temperature, humidity, 
+    SQL = """
+    insert into weather (ts,station,temperature, humidity, 
         pressure, insolation, rain, wind_speed, wind_speed_heading)
-        values (to_timestamp(%s, 'YYYY/MM/DD hh24:mi'), %s,
-         %s, %s, %s, %s, %s, %s, %s);"""
+    select (to_timestamp(%s, 'YYYY/MM/DD hh24:mi'), %s,
+         %s, %s, %s, %s, %s, %s, %s)
+    where not exists (
+        select ts, station from weather
+        where ts = to_timestamp(%s, 'YYYY/MM/DD hh24:mi') and station = %s);
+    
+    """
 
     # Insert data into Postgres database.
     cursor.execute(SQL, (timestamp, station, temperature, humidity, 
-        pressure, insolation, rain, wind_speed, wind_speed_heading))
+        pressure, insolation, rain, wind_speed, wind_speed_heading,
+        timestamp, station))
     conn.commit()
 
 channel.basic_consume(callback,
