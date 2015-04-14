@@ -66,11 +66,11 @@ def callback(ch, method, properties, body):
     value_insert = ','.join(value_list)
 
     # Create INSERT statement.
-    SQL = """insert into weather (ts, station, %s)
-        values (to_timestamp(%s, 'YYYY/MM/DD hh24:mi'), %s, %s);"""
+    SQL = """insert into weather (ts,station,{0})
+        values (to_timestamp(%s, 'YYYY/MM/DD hh24:mi'), %s, %s);""".format(measurement_insert)
 
     # Insert data into Postgres database.
-    cursor.execute(SQL, (measurement_insert, timestamp, station, value_insert))
+    cursor.execute(SQL, (timestamp, station, value_list))
     conn.commit()
 
 channel.basic_consume(callback,
