@@ -52,26 +52,18 @@ def callback(ch, method, properties, body):
     timestamp = message.findtext('observation_time')
     timestamp = timestamp.replace(',', '') # remove comma in timestamp
 
-    # Iterate through message and extract measurements and values.
-    measurement_list = []
-    value_list = []
 
     for measurement in measurement_set:
         if message.find(measurement) is not None:
-            measurement_list.append(measurement)
-            value_list.append(message.findtext(measurement))
 
-    # Put measurements and values into format for database insert.
-    measurement_insert = ','.join(measurement_list)
-    value_insert = ','.join(value_list)
+            SQL = """insert into weather (ts, station, {0})
+            values (to_timestamp(%s, 'YYYY/MM/DD hh24:mi', %s)""".format(measurement)
 
-    # Create INSERT statement.
-    SQL = """insert into weather (ts,station,{0})
-        values (to_timestamp('{1}', 'YYYY/MM/DD hh24:mi'),'{2}',{3});""".format(measurement_insert, timestamp, station, value_insert)
+            cursor.execute(SQL, (timestamp, message.findtext(measurement)))
+
     print SQL
 
-    # Insert data into Postgres database.
-    cursor.execute(SQL)
+    # Commit into Postgres database.
     conn.commit()
 
 channel.basic_consume(callback,
