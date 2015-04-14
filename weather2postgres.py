@@ -63,7 +63,7 @@ def callback(ch, method, properties, body):
 
     # Put measurements and values into format for database insert.
     measurement_insert = ','.join(measurement_list)
-    value_insert = ','.join(value_list)
+    value_insert = tuple(value_list)
 
     # Create INSERT statement.
     SQL = """insert into weather (ts,station,{0})
