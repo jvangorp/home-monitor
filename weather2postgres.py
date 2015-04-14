@@ -63,14 +63,16 @@ def callback(ch, method, properties, body):
 
     # Put measurements and values into format for database insert.
     measurement_insert = ','.join(measurement_list)
-    value_insert = tuple(value_list)
+    value_insert = ','.join(value_list)
 
     # Create INSERT statement.
     SQL = """insert into weather (ts,station,{0})
-        values (to_timestamp(%s, 'YYYY/MM/DD hh24:mi'), %s, %s);""".format(measurement_insert)
+        values (to_timestamp({1}, 'YYYY/MM/DD hh24:mi'),
+        {2}, {3});""".format(measurement_insert, timestamp, station, value_insert)
+    print SQL
 
     # Insert data into Postgres database.
-    cursor.execute(SQL, (timestamp, station, value_insert))
+    cursor.execute(SQL)
     conn.commit()
 
 channel.basic_consume(callback,
