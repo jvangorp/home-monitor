@@ -67,7 +67,7 @@ def callback(ch, method, properties, body):
 
     # Create INSERT statement.
     SQL = """insert into weather (ts,station,{0})
-        values (to_timestamp({1}), 'YYYY/MM/DD hh24:mi'),
+        values (to_timestamp('{1}', 'YYYY/MM/DD hh24:mi'),
         {2},{3});""".format(measurement_insert, timestamp, station, value_insert)
     print SQL
 
