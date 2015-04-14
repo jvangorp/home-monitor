@@ -57,7 +57,7 @@ def callback(ch, method, properties, body):
         if message.find(measurement) is not None:
 
             SQL = """insert into weather (ts, station, {0})
-            values (to_timestamp(%s, 'YYYY/MM/DD hh24:mi', %s);""".format(measurement)
+            values (to_timestamp(%s, 'YYYY/MM/DD hh24:mi', %s));""".format(measurement)
 
             cursor.execute(SQL, (timestamp, message.findtext(measurement)))
 
