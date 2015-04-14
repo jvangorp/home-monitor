@@ -70,7 +70,7 @@ def callback(ch, method, properties, body):
         values (to_timestamp(%s, 'YYYY/MM/DD hh24:mi'), %s, %s);"""
 
     # Insert data into Postgres database.
-    cursor.execute(SQL, (measurement_insert, timestamp, station, value_insert)
+    cursor.execute(SQL, (measurement_insert, timestamp, station, value_insert))
     conn.commit()
 
 channel.basic_consume(callback,
