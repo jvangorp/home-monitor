@@ -37,10 +37,6 @@ host={0} dbname={1} user={2} password={3}
 conn = psycopg2.connect(conn_string)
 cursor = conn.cursor()
 
-# Set up list of weather measurements of interest.
-measurement_set = ['temperature', 'humidity', 'pressure', 'insolation',
-    'rain', 'wind_speed', 'wind_speed_heading']
-
 # Set up callback function to process queue messages.
 def callback(ch, method, properties, body):
     message = etree.fromstring(body)
@@ -52,16 +48,24 @@ def callback(ch, method, properties, body):
     timestamp = message.findtext('observation_time')
     timestamp = timestamp.replace(',', '') # remove comma in timestamp
 
+    # Extract measurement values from message.
+    temperature = message.findtext('temperature')
+    humidity = message.findtext('humidity')
+    pressure = message.findtext('pressure')
+    insolation = message.findtext('insolation')
+    rain = message.findtext('rain')
+    wind_speed = message.findtext('wind_speed')
+    wind_speed_heading = message.findtext('wind_speed_heading')
 
-    for measurement in measurement_set:
-        if message.find(measurement) is not None:
+    # Create INSERT statement.
+    SQL = """insert into weather (ts,station,temperature, humidity, 
+        pressure, insolation, rain, wind_speed, wind_speed_heading)
+        values (to_timestamp(%s, 'YYYY/MM/DD hh24:mi'), %s,
+         %s, %s, %s, %s, %s, %s, %s);"""
 
-            SQL = """insert into weather (ts, station, {0})
-            values (to_timestamp(%s, 'YYYY/MM/DD hh24:mi'), %s, %s);""".format(measurement)
-            print SQL
-            cursor.execute(SQL, (timestamp, station, message.findtext(measurement)))
-
-    # Commit into Postgres database.
+    # Insert data into Postgres database.
+    cursor.execute(SQL, (timestamp, station, temperature, humidity, 
+        pressure, insolation, rain, wind_speed, wind_speed_heading))
     conn.commit()
 
 channel.basic_consume(callback,
