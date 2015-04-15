@@ -59,21 +59,21 @@ def callback(ch, method, properties, body):
 
     # Create INSERT statement.
     SQL = """
-    insert into weather (ts,station,temperature, humidity, 
+    insert into weather (ts, station, temperature, humidity, 
         pressure, insolation, rain, wind_speed, wind_speed_heading)
-    select (to_timestamp(%s, 'YYYY/MM/DD hh24:mi'), %s,
-         %s, %s, %s, %s, %s, %s, %s)
-    where not exists (
-        select ts, station from weather
-        where ts = to_timestamp(%s, 'YYYY/MM/DD hh24:mi') and station = %s);
-    
+    values (to_timestamp(%s, 'YYYY/MM/DD hh24:mi'), %s,
+         %s, %s, %s, %s, %s, %s, %s);
     """
 
-    # Insert data into Postgres database.
-    cursor.execute(SQL, (timestamp, station, temperature, humidity, 
-        pressure, insolation, rain, wind_speed, wind_speed_heading,
-        timestamp, station))
-    conn.commit()
+    # Insert data into Postgres database but just contine if an error 
+    # is thrown.
+    try:
+        cursor.execute(SQL, (timestamp, station, temperature, humidity, 
+            pressure, insolation, rain, wind_speed, wind_speed_heading,
+            timestamp, station))
+        conn.commit()
+    except:
+        pass
 
 channel.basic_consume(callback,
                       queue=queue_name,
