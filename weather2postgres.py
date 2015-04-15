@@ -71,9 +71,10 @@ def callback(ch, method, properties, body):
         cursor.execute(SQL, (timestamp, station, temperature, humidity, 
             pressure, insolation, rain, wind_speed, wind_speed_heading,
             timestamp, station))
-        conn.commit()
-    except:
-        pass
+    except psycopg2.IntegrityError:
+        conn.rollback()
+    else:
+        con.commit()
 
 channel.basic_consume(callback,
                       queue=queue_name,
