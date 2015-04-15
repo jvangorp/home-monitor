@@ -69,10 +69,11 @@ def callback(ch, method, properties, body):
     # is thrown.
     try:
         cursor.execute(SQL, (timestamp, station, temperature, humidity, 
-            pressure, insolation, rain, wind_speed, wind_speed_heading,
-            timestamp, station))
+            pressure, insolation, rain, wind_speed, wind_speed_heading))
+
     except psycopg2.IntegrityError:
         conn.rollback()
+        
     else:
         con.commit()
 
