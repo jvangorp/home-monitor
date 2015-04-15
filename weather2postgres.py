@@ -73,9 +73,9 @@ def callback(ch, method, properties, body):
 
     except psycopg2.IntegrityError:
         conn.rollback()
-        
+
     else:
-        con.commit()
+        conn.commit()
 
 channel.basic_consume(callback,
                       queue=queue_name,
