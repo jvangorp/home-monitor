@@ -41,7 +41,7 @@ def callback(ch, method, properties, body):
 
     # Extract timestamp and remove the 's' at the end.
     eagle_time = message.attrib['timestamp']
-    eagle_time = eagle_time[:-1]
+    eagle_time = int(eagle_time[:-1])
 
     # Compare Eagle gateway time with server time - if the difference
     # is too large, restart the 'eagle-endpoint.py' script and
