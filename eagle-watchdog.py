@@ -37,7 +37,6 @@ latest_timestamp = int(query_result[0])
 # too old.
 local_time = int(time.time())
 time_delta = abs(local_time - latest_timestamp)
-print time_delta
 
 if time_delta > 120:
   logging.warning('Eagle web service restarted')
