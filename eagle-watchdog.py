@@ -2,6 +2,7 @@
 # restart the web endpoint if the timestamp is too old.
 import logging
 import time
+import psycopg2
 from ConfigParser import SafeConfigParser
 
 # Read in app config values.
