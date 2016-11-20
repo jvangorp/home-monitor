@@ -64,9 +64,17 @@ def callback(ch, method, properties, body):
         SQL = """insert into demand (ts, kw)
             values (to_timestamp(%s), %s);"""
 
-        # Insert data into Postgres database.
-        cursor.execute(SQL, (timestamp + ts_offset, InstantaneousDemand))
-        conn.commit()
+        # Insert data into Postgres database but just skip this insert
+        # if an error is thrown - this could happen if sequential demand 
+        # measurements have the same timestamp.
+        try:
+                cursor.execute(SQL, (timestamp + ts_offset, InstantaneousDemand))
+                
+        except psycopg2.IntegrityError:
+                conn.rollback()
+                
+        else:
+                conn.commit()
 
 channel.basic_consume(callback,
                       queue=queue_name,
