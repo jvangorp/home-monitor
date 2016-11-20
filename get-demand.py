@@ -44,14 +44,14 @@ while True:
                          type='fanout')
 
 	# Get demand data and push to RabbitMQ queue.
-	response = requests.post(url, data=body, headers=headers)
-	print response.text
+	demand = requests.post(url, data=body, headers=headers)
+	print demand.text
 
-	if response.status_code == 200:
+	if demand.status_code == 200:
 		# Send station current weather update to the RabbitMQ queue.
 		channel.basic_publish(exchange='vangorp.home.eagle',
                    routing_key='',
-                   body=current_summary.text)
+                   body=demand.text)
 
 	connection.close()
 
