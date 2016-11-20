@@ -13,6 +13,10 @@ database = config.get('Postgres', 'database')
 user = config.get('Postgres', 'user')
 password = config.get('Postgres', 'password')
 
+# Offset between Unix Epoch time and the UTC time format
+# used by the Eagle gateway (seconds since Jan 1, 2000).
+ts_offset = 946684800
+
 # Set up the connection to the RabbitMQ server.
 connection = pika.BlockingConnection(pika.ConnectionParameters(
         host='localhost'))
@@ -43,10 +47,6 @@ def callback(ch, method, properties, body):
     # print " [x] %r" % (body,)
     message = etree.fromstring(body)
 
-    # Extract timestamp and remove the 's' at the end.
-    timestamp = message.attrib['timestamp']
-    timestamp = timestamp[:-1]
-
     # Extract set of elements from Eagle gateway post.
     fragment = message[0]
 
@@ -54,6 +54,7 @@ def callback(ch, method, properties, body):
     if fragment.tag == 'InstantaneousDemand':
 
         # Extract demand measurement value.
+        timestamp = int(fragment.findtext('TimeStamp'), base=0)
         demand = int(fragment.findtext('Demand'), base=0)
         multiplier = int(fragment.findtext('Multiplier'), base=0)
         divisor = int(fragment.findtext('Divisor'), base=0)
@@ -64,7 +65,7 @@ def callback(ch, method, properties, body):
             values (to_timestamp(%s), %s);"""
 
         # Insert data into Postgres database.
-        cursor.execute(SQL, (timestamp, InstantaneousDemand))
+        cursor.execute(SQL, (timestamp + ts_offset, InstantaneousDemand))
         conn.commit()
 
 channel.basic_consume(callback,
