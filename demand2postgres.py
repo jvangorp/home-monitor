@@ -47,10 +47,6 @@ def callback(ch, method, properties, body):
     # print " [x] %r" % (body,)
     message = etree.fromstring(body)
 
-    # Extract set of elements from Eagle gateway post.
-    print message
-    print message.tag
-
     # Process the InstantaneousDemand fragment.
     if message.tag == 'InstantaneousDemand':
 
