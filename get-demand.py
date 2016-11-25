@@ -45,6 +45,7 @@ while True:
 
 	# Get demand data and push to RabbitMQ queue.
 	demand = requests.post(url, data=body, headers=headers)
+	print demand.text
 
 	if demand.status_code == 200:
 		# Send station current weather update to the RabbitMQ queue.
