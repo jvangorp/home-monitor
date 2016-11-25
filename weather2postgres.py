@@ -65,7 +65,7 @@ def callback(ch, method, properties, body):
          %s, %s, %s, %s, %s, %s, %s);
     """
 
-    # Insert data into Postgres database but just contine if an error 
+    # Insert data into Postgres database but just continue if an error 
     # is thrown.
     try:
         cursor.execute(SQL, (timestamp, station, temperature, humidity, 
