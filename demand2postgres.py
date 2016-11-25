@@ -48,17 +48,17 @@ def callback(ch, method, properties, body):
     message = etree.fromstring(body)
 
     # Extract set of elements from Eagle gateway post.
-    fragment = message[0]
-    print fragment
+    print message
+    print message.tag
 
     # Process the InstantaneousDemand fragment.
-    if fragment.tag == 'InstantaneousDemand':
+    if message.tag == 'InstantaneousDemand':
 
         # Extract demand measurement value.
-        timestamp = int(fragment.findtext('TimeStamp'), base=0)
-        demand = int(fragment.findtext('Demand'), base=0)
-        multiplier = int(fragment.findtext('Multiplier'), base=0)
-        divisor = int(fragment.findtext('Divisor'), base=0)
+        timestamp = int(message.findtext('TimeStamp'), base=0)
+        demand = int(message.findtext('Demand'), base=0)
+        multiplier = int(message.findtext('Multiplier'), base=0)
+        divisor = int(message.findtext('Divisor'), base=0)
         InstantaneousDemand = (demand * multiplier)/float(divisor)
 
         # Create INSERT statement.
