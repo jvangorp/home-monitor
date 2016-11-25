@@ -68,13 +68,13 @@ def callback(ch, method, properties, body):
         # if an error is thrown - this could happen if sequential demand 
         # measurements have the same timestamp.
         try:
-                cursor.execute(SQL, (timestamp + ts_offset, InstantaneousDemand))
-                
+            cursor.execute(SQL, (timestamp + ts_offset, InstantaneousDemand))
+    
         except psycopg2.IntegrityError:
-                conn.rollback()
-                
+            conn.rollback()
+    
         else:
-                conn.commit()
+            conn.commit()
 
 channel.basic_consume(callback,
                       queue=queue_name,
