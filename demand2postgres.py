@@ -49,6 +49,7 @@ def callback(ch, method, properties, body):
 
     # Extract set of elements from Eagle gateway post.
     fragment = message[0]
+    print fragment
 
     # Process the InstantaneousDemand fragment.
     if fragment.tag == 'InstantaneousDemand':
@@ -69,6 +70,8 @@ def callback(ch, method, properties, body):
         # measurements have the same timestamp.
         try:
             cursor.execute(SQL, (timestamp + ts_offset, InstantaneousDemand))
+            print cursor.query
+            print cursor.statusmessage
     
         except psycopg2.IntegrityError:
             conn.rollback()
