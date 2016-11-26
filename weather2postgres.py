@@ -62,7 +62,7 @@ def callback(ch, method, properties, body):
     insert into weather (ts, station, temperature, humidity, 
         pressure, insolation, rain, wind_speed, wind_speed_heading)
     values (to_timestamp(%s, 'YYYY/MM/DD hh24:mi'), %s,
-         %s, %s, %s, %s, %s, %s, %s);
+         %s, %s, %s, %s, %s, %s, %s) on conflict do nothing;
     """
 
     # Insert data into Postgres database but just continue if an error 

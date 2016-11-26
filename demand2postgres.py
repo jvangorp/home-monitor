@@ -59,7 +59,7 @@ def callback(ch, method, properties, body):
 
         # Create INSERT statement.
         SQL = """insert into demand (ts, kw)
-            values (to_timestamp(%s), %s);"""
+            values (to_timestamp(%s), %s) on conflict do nothing;"""
 
         # Insert data into Postgres database but just skip this insert
         # if an error is thrown - this could happen if sequential demand 
