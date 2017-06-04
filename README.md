@@ -1,4 +1,4 @@
-monitor-apps
+home-monitor
 ============
 
 This repository contains a collection of small scripts that form a monitoring system using a publish/subscribe pattern. This approach is used to receive data streamed by an [Eagle gateway](http://rainforestautomation.com/rfa-z109-eagle/) (built by [Rainforest Automation](http://rainforestautomation.com)) and push the data into a message queue for consumption by separate scripts.
